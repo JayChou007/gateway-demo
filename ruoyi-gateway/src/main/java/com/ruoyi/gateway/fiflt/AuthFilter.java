@@ -1,10 +1,10 @@
 package com.ruoyi.gateway.fiflt;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.domain.R;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -16,15 +16,12 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.R;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 /**
  * 网关鉴权
@@ -36,7 +33,7 @@ public class AuthFilter implements GlobalFilter, Ordered
     // 排除过滤的 uri 地址
     // swagger排除自行添加
     private static final String[]           whiteList = {"/auth/login", "/user/register", "/system/v2/api-docs",
-            "/auth/captcha/check", "/auth/captcha/get","/auth/login/slide"};
+            "/auth/captcha/check", "/auth/captcha/get","/auth/login/slide","/api/v1/marketing/coupon/reserve/SPR_FST"};
 
     @Resource(name = "stringRedisTemplate")
     private ValueOperations<String, String> ops;

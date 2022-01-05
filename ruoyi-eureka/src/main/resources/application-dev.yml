@@ -1,6 +1,11 @@
 server: 
   port: 7001
- 
+
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled : false
 eureka: 
   instance:
     hostname: eureka7001.com #eureka服务端的实例名称
