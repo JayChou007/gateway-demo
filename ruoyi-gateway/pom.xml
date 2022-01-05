@@ -69,6 +69,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
         </dependency>
+        <!--apollo配置中心jar -->
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>1.9.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
