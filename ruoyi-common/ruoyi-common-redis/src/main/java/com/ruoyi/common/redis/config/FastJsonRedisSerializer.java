@@ -1,12 +1,11 @@
 package com.ruoyi.common.redis.config;
 
-import java.nio.charset.Charset;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import java.nio.charset.Charset;
 
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
 {
@@ -20,6 +19,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
         this.clazz = clazz;
     }
 
+    @Override
     public byte[] serialize(T t) throws SerializationException
     {
         if (t == null)
@@ -29,6 +29,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
         return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(DEFAULT_CHARSET);
     }
 
+    @Override
     public T deserialize(byte[] bytes) throws SerializationException
     {
         if (bytes == null || bytes.length <= 0)

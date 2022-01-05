@@ -1,10 +1,8 @@
 package com.ruoyi.common.utils;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Map通用处理方法
@@ -16,7 +14,7 @@ public class MapDataUtil
     public static Map<String, Object> convertDataMap(HttpServletRequest request)
     {
         Map<String, String[]> properties = request.getParameterMap();
-        Map<String, Object> returnMap = new HashMap<String, Object>();
+        Map<String, Object> returnMap = new HashMap<String, Object>(10);
         Iterator<?> entries = properties.entrySet().iterator();
         Map.Entry<?, ?> entry;
         String name = "";

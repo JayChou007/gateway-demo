@@ -1,10 +1,9 @@
 package com.ruoyi.common.core.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Entity基类
@@ -126,7 +125,7 @@ public class BaseEntity implements Serializable
     {
         if (params == null)
         {
-            params = new HashMap<>();
+            params = new HashMap<>(2);
         }
         return params;
     }

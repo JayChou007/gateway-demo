@@ -1,16 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.core.controller.BaseController;
@@ -20,6 +9,11 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单权限 
@@ -60,14 +54,16 @@ public class SysMenuController extends BaseController
 
     /**
      * 根据角色编号查询菜单编号（用于勾选）
+     *
      * @param roleId
      * @return
      * @author zmr
      */
     @GetMapping("role/{roleId}")
-    public List<SysMenu> role(@PathVariable("roleId") Long roleId)
-    {
-        if (null == roleId || roleId <= 0) return null;
+    public List<SysMenu> role(@PathVariable("roleId") Long roleId) {
+        if (null == roleId || roleId <= 0) {
+            return null;
+        }
         return sysMenuService.selectMenuIdsByRoleId(roleId);
     }
 

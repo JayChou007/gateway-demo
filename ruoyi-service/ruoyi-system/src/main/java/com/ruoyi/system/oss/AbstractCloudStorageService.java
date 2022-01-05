@@ -1,22 +1,21 @@
 package com.ruoyi.system.oss;
 
-import java.io.InputStream;
-import java.util.UUID;
-
+import com.ruoyi.common.utils.DateUtils;
 import org.apache.commons.lang.StringUtils;
 
-import com.ruoyi.common.utils.DateUtils;
+import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * 云存储(支持七牛、阿里云、腾讯云、又拍云)
  */
-public abstract class CloudStorageService
-{
-    /** 云存储配置信息 */
+public abstract class AbstractCloudStorageService {
+    /**
+     * 云存储配置信息
+     */
     CloudStorageConfig config;
 
-    public int getService()
-    {
+    public int getService() {
         return config.getType();
     }
 

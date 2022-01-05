@@ -131,6 +131,7 @@ public class Districts extends BaseEntity
         return operator;
     }
 
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId()).append("pid", getPid())

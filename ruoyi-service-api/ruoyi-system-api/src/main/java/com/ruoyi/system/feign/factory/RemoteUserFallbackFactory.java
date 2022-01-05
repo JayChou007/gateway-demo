@@ -1,15 +1,13 @@
 package com.ruoyi.system.feign.factory;
 
-import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.feign.RemoteUserService;
-
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -37,7 +35,7 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
             public SysUser selectSysUserByUserId(long userId)
             {
                 SysUser user = new SysUser();
-                user.setUserId(0l);
+                user.setUserId(0L);
                 user.setLoginName("no user");
                 return user;
             }

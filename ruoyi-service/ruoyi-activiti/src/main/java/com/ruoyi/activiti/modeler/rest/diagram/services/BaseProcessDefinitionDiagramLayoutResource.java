@@ -21,9 +21,7 @@ import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.bpmn.behavior.BoundaryEventActivityBehavior;
 import org.activiti.engine.impl.bpmn.behavior.CallActivityBehavior;
-import org.activiti.engine.impl.bpmn.parser.BpmnParse;
-import org.activiti.engine.impl.bpmn.parser.ErrorEventDefinition;
-import org.activiti.engine.impl.bpmn.parser.EventSubscriptionDeclaration;
+import org.activiti.engine.impl.bpmn.parser.*;
 import org.activiti.engine.impl.jobexecutor.TimerDeclarationImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -108,21 +106,22 @@ public ObjectNode getDiagramNode(String processInstanceId, String processDefinit
 
     // Highlighted activities
     if (processInstance != null) {
-      ArrayNode activityArray = new ObjectMapper().createArrayNode();
-      ArrayNode flowsArray = new ObjectMapper().createArrayNode();
+        ArrayNode activityArray = new ObjectMapper().createArrayNode();
+        ArrayNode flowsArray = new ObjectMapper().createArrayNode();
 
-      highLightedActivities = runtimeService.getActiveActivityIds(processInstanceId);
-      highLightedFlows = getHighLightedFlows(processInstanceId, processDefinition);
+        highLightedActivities = runtimeService.getActiveActivityIds(processInstanceId);
+        highLightedFlows = getHighLightedFlows(processInstanceId, processDefinition);
 
-      for (String activityName : highLightedActivities) {
-        activityArray.add(activityName);
-      }
+        for (String activityName : highLightedActivities) {
+            activityArray.add(activityName);
+        }
 
-      for (String flow : highLightedFlows)
-        flowsArray.add(flow);
+        for (String flow : highLightedFlows) {
+            flowsArray.add(flow);
+        }
 
-      responseJSON.put("highLightedActivities", activityArray);
-      responseJSON.put("highLightedFlows", flowsArray);
+        responseJSON.put("highLightedActivities", activityArray);
+        responseJSON.put("highLightedFlows", flowsArray);
     }
 
     // Pool shape, if process is participant in collaboration
@@ -166,28 +165,29 @@ public ObjectNode getDiagramNode(String processInstanceId, String processDefinit
 
             List<String> flowNodeIds = lane.getFlowNodeIds();
             ArrayNode flowNodeIdsArray = new ObjectMapper().createArrayNode();
-            for (String flowNodeId : flowNodeIds) {
-              flowNodeIdsArray.add(flowNodeId);
-            }
-            laneJSON.put("flowNodeIds", flowNodeIdsArray);
+              for (String flowNodeId : flowNodeIds) {
+                  flowNodeIdsArray.add(flowNodeId);
+              }
+              laneJSON.put("flowNodeIds", flowNodeIdsArray);
 
-            laneArray.add(laneJSON);
+              laneArray.add(laneJSON);
           }
         }
-        ObjectNode laneSetJSON = new ObjectMapper().createObjectNode();
-        laneSetJSON.put("id", laneSet.getId());
-        if (StringUtils.isNotEmpty(laneSet.getName())) {
-          laneSetJSON.put("name", laneSet.getName());
-        } else {
-          laneSetJSON.put("name", "");
-        }
-        laneSetJSON.put("lanes", laneArray);
+          ObjectNode laneSetJSON = new ObjectMapper().createObjectNode();
+          laneSetJSON.put("id", laneSet.getId());
+          if (StringUtils.isNotEmpty(laneSet.getName())) {
+              laneSetJSON.put("name", laneSet.getName());
+          } else {
+              laneSetJSON.put("name", "");
+          }
+          laneSetJSON.put("lanes", laneArray);
 
-        laneSetArray.add(laneSetJSON);
+          laneSetArray.add(laneSetJSON);
       }
 
-      if (laneSetArray.size() > 0)
-        responseJSON.put("laneSets", laneSetArray);
+        if (laneSetArray.size() > 0) {
+            responseJSON.put("laneSets", laneSetArray);
+        }
     }
 
     ArrayNode sequenceFlowArray = new ObjectMapper().createArrayNode();
@@ -271,41 +271,45 @@ private void getActivity(String processInstanceId, ActivityImpl activity, ArrayN
 
     // Outgoing transitions of activity
     for (PvmTransition sequenceFlow : activity.getOutgoingTransitions()) {
-      String flowName = (String) sequenceFlow.getProperty("name");
-      boolean isHighLighted = (highLightedFlows.contains(sequenceFlow.getId()));
-      boolean isConditional = sequenceFlow.getProperty(BpmnParse.PROPERTYNAME_CONDITION) != null && 
-          !((String) activity.getProperty("type")).toLowerCase().contains("gateway");
-      boolean isDefault = sequenceFlow.getId().equals(activity.getProperty("default"))
-          && ((String) activity.getProperty("type")).toLowerCase().contains("gateway");
+        String flowName = (String) sequenceFlow.getProperty("name");
+        boolean isHighLighted = (highLightedFlows.contains(sequenceFlow.getId()));
+        boolean isConditional = sequenceFlow.getProperty(BpmnParse.PROPERTYNAME_CONDITION) != null &&
+                !((String) activity.getProperty("type")).toLowerCase().contains("gateway");
+        boolean isDefault = sequenceFlow.getId().equals(activity.getProperty("default"))
+                && ((String) activity.getProperty("type")).toLowerCase().contains("gateway");
 
-      List<Integer> waypoints = ((TransitionImpl) sequenceFlow).getWaypoints();
-      ArrayNode xPointArray = new ObjectMapper().createArrayNode();
-      ArrayNode yPointArray = new ObjectMapper().createArrayNode();
-      for (int i = 0; i < waypoints.size(); i += 2) { // waypoints.size()
-                                                      // minimally 4: x1, y1,
-                                                      // x2, y2
-        xPointArray.add(waypoints.get(i));
-        yPointArray.add(waypoints.get(i + 1));
-      }
+        List<Integer> waypoints = ((TransitionImpl) sequenceFlow).getWaypoints();
+        ArrayNode xPointArray = new ObjectMapper().createArrayNode();
+        ArrayNode yPointArray = new ObjectMapper().createArrayNode();
+        for (int i = 0; i < waypoints.size(); i += 2) {
+            // waypoints.size()
+            // minimally 4: x1, y1,
+            // x2, y2
+            xPointArray.add(waypoints.get(i));
+            yPointArray.add(waypoints.get(i + 1));
+        }
 
-      ObjectNode flowJSON = new ObjectMapper().createObjectNode();
-      flowJSON.put("id", sequenceFlow.getId());
-      flowJSON.put("name", flowName);
-      flowJSON.put("flow", "(" + sequenceFlow.getSource().getId() + ")--"
-          + sequenceFlow.getId() + "-->("
-          + sequenceFlow.getDestination().getId() + ")");
+        ObjectNode flowJSON = new ObjectMapper().createObjectNode();
+        flowJSON.put("id", sequenceFlow.getId());
+        flowJSON.put("name", flowName);
+        flowJSON.put("flow", "(" + sequenceFlow.getSource().getId() + ")--"
+                + sequenceFlow.getId() + "-->("
+                + sequenceFlow.getDestination().getId() + ")");
 
-      if (isConditional)
-        flowJSON.put("isConditional", isConditional);
-      if (isDefault)
-        flowJSON.put("isDefault", isDefault);
-      if (isHighLighted)
-        flowJSON.put("isHighLighted", isHighLighted);
-      
-      flowJSON.put("xPointArray", xPointArray);
-      flowJSON.put("yPointArray", yPointArray);
+        if (isConditional) {
+            flowJSON.put("isConditional", isConditional);
+        }
+        if (isDefault) {
+            flowJSON.put("isDefault", isDefault);
+        }
+        if (isHighLighted) {
+            flowJSON.put("isHighLighted", isHighLighted);
+        }
 
-      sequenceFlowArray.add(flowJSON);
+        flowJSON.put("xPointArray", xPointArray);
+        flowJSON.put("yPointArray", yPointArray);
+
+        sequenceFlowArray.add(flowJSON);
     }
 
     // Nested activities (boundary events)
@@ -317,83 +321,90 @@ private void getActivity(String processInstanceId, ActivityImpl activity, ArrayN
     Map<String, Object> properties = activity.getProperties();
     ObjectNode propertiesJSON = new ObjectMapper().createObjectNode();
     for (String key : properties.keySet()) {
-      Object prop = properties.get(key);
-      if (prop instanceof String)
-        propertiesJSON.put(key, (String) properties.get(key));
-      else if (prop instanceof Integer)
-        propertiesJSON.put(key, (Integer) properties.get(key));
-      else if (prop instanceof Boolean)
-        propertiesJSON.put(key, (Boolean) properties.get(key));
-      else if ("initial".equals(key)) {
-        ActivityImpl act = (ActivityImpl) properties.get(key);
-        propertiesJSON.put(key, act.getId());
-      } else if ("timerDeclarations".equals(key)) {
-        ArrayList<TimerDeclarationImpl> timerDeclarations = (ArrayList<TimerDeclarationImpl>) properties.get(key);
-        ArrayNode timerDeclarationArray = new ObjectMapper().createArrayNode();
+        Object prop = properties.get(key);
+        if (prop instanceof String) {
+            propertiesJSON.put(key, (String) properties.get(key));
+        } else if (prop instanceof Integer) {
+            propertiesJSON.put(key, (Integer) properties.get(key));
+        } else if (prop instanceof Boolean) {
+            propertiesJSON.put(key, (Boolean) properties.get(key));
+        } else if ("initial".equals(key)) {
+            ActivityImpl act = (ActivityImpl) properties.get(key);
+            propertiesJSON.put(key, act.getId());
+        } else if ("timerDeclarations".equals(key)) {
+            ArrayList<TimerDeclarationImpl> timerDeclarations = (ArrayList<TimerDeclarationImpl>) properties.get(key);
+            ArrayNode timerDeclarationArray = new ObjectMapper().createArrayNode();
 
-        if (timerDeclarations != null)
-          for (TimerDeclarationImpl timerDeclaration : timerDeclarations) {
-            ObjectNode timerDeclarationJSON = new ObjectMapper().createObjectNode();
+            if (timerDeclarations != null) {
+                for (TimerDeclarationImpl timerDeclaration : timerDeclarations) {
+                    ObjectNode timerDeclarationJSON = new ObjectMapper().createObjectNode();
 
-            timerDeclarationJSON.put("isExclusive", timerDeclaration.isExclusive());
-            if (timerDeclaration.getRepeat() != null)
-              timerDeclarationJSON.put("repeat", timerDeclaration.getRepeat());
-            
-            timerDeclarationJSON.put("retries", String.valueOf(timerDeclaration.getRetries()));
-            timerDeclarationJSON.put("type", timerDeclaration.getJobHandlerType());
-            timerDeclarationJSON.put("configuration", timerDeclaration.getJobHandlerConfiguration());
-            //timerDeclarationJSON.put("expression", timerDeclaration.getDescription());
-            
-            timerDeclarationArray.add(timerDeclarationJSON);
-          }
-        if (timerDeclarationArray.size() > 0)
-          propertiesJSON.put(key, timerDeclarationArray);
-        // TODO: implement getting description
-      } else if ("eventDefinitions".equals(key)) {
-        ArrayList<EventSubscriptionDeclaration> eventDefinitions = (ArrayList<EventSubscriptionDeclaration>) properties.get(key);
-        ArrayNode eventDefinitionsArray = new ObjectMapper().createArrayNode();
+                    timerDeclarationJSON.put("isExclusive", timerDeclaration.isExclusive());
+                    if (timerDeclaration.getRepeat() != null) {
+                        timerDeclarationJSON.put("repeat", timerDeclaration.getRepeat());
+                    }
 
-        if (eventDefinitions != null) {
-          for (EventSubscriptionDeclaration eventDefinition : eventDefinitions) {
-            ObjectNode eventDefinitionJSON = new ObjectMapper().createObjectNode();
+                    timerDeclarationJSON.put("retries", String.valueOf(timerDeclaration.getRetries()));
+                    timerDeclarationJSON.put("type", timerDeclaration.getJobHandlerType());
+                    timerDeclarationJSON.put("configuration", timerDeclaration.getJobHandlerConfiguration());
+                    //timerDeclarationJSON.put("expression", timerDeclaration.getDescription());
 
-            if (eventDefinition.getActivityId() != null)
-              eventDefinitionJSON.put("activityId",eventDefinition.getActivityId());
-            
-            eventDefinitionJSON.put("eventName", eventDefinition.getEventName());
-            eventDefinitionJSON.put("eventType", eventDefinition.getEventType());
-            eventDefinitionJSON.put("isAsync", eventDefinition.isAsync());
-            eventDefinitionJSON.put("isStartEvent", eventDefinition.isStartEvent());
-            eventDefinitionsArray.add(eventDefinitionJSON);
-          }
+                    timerDeclarationArray.add(timerDeclarationJSON);
+                }
+            }
+            if (timerDeclarationArray.size() > 0) {
+                propertiesJSON.put(key, timerDeclarationArray);
+            }
+            // TODO: implement getting description
+        } else if ("eventDefinitions".equals(key)) {
+            ArrayList<EventSubscriptionDeclaration> eventDefinitions = (ArrayList<EventSubscriptionDeclaration>) properties.get(key);
+            ArrayNode eventDefinitionsArray = new ObjectMapper().createArrayNode();
+
+            if (eventDefinitions != null) {
+                for (EventSubscriptionDeclaration eventDefinition : eventDefinitions) {
+                    ObjectNode eventDefinitionJSON = new ObjectMapper().createObjectNode();
+
+                    if (eventDefinition.getActivityId() != null) {
+                        eventDefinitionJSON.put("activityId", eventDefinition.getActivityId());
+                    }
+
+                    eventDefinitionJSON.put("eventName", eventDefinition.getEventName());
+                    eventDefinitionJSON.put("eventType", eventDefinition.getEventType());
+                    eventDefinitionJSON.put("isAsync", eventDefinition.isAsync());
+                    eventDefinitionJSON.put("isStartEvent", eventDefinition.isStartEvent());
+                    eventDefinitionsArray.add(eventDefinitionJSON);
+                }
+            }
+
+            if (eventDefinitionsArray.size() > 0) {
+                propertiesJSON.put(key, eventDefinitionsArray);
+            }
+
+        } else if ("errorEventDefinitions".equals(key)) {
+            ArrayList<ErrorEventDefinition> errorEventDefinitions = (ArrayList<ErrorEventDefinition>) properties.get(key);
+            ArrayNode errorEventDefinitionsArray = new ObjectMapper().createArrayNode();
+
+            if (errorEventDefinitions != null) {
+                for (ErrorEventDefinition errorEventDefinition : errorEventDefinitions) {
+                    ObjectNode errorEventDefinitionJSON = new ObjectMapper().createObjectNode();
+
+                    if (errorEventDefinition.getErrorCode() != null) {
+                        errorEventDefinitionJSON.put("errorCode", errorEventDefinition.getErrorCode());
+                    } else {
+                        errorEventDefinitionJSON.putNull("errorCode");
+                    }
+
+                    errorEventDefinitionJSON.put("handlerActivityId",
+                            errorEventDefinition.getHandlerActivityId());
+
+                    errorEventDefinitionsArray.add(errorEventDefinitionJSON);
+                }
+            }
+
+            if (errorEventDefinitionsArray.size() > 0) {
+                propertiesJSON.put(key, errorEventDefinitionsArray);
+            }
         }
-
-        if (eventDefinitionsArray.size() > 0)
-          propertiesJSON.put(key, eventDefinitionsArray);
-        
-      } else if ("errorEventDefinitions".equals(key)) {
-        ArrayList<ErrorEventDefinition> errorEventDefinitions = (ArrayList<ErrorEventDefinition>) properties.get(key);
-        ArrayNode errorEventDefinitionsArray = new ObjectMapper().createArrayNode();
-
-        if (errorEventDefinitions != null) {
-          for (ErrorEventDefinition errorEventDefinition : errorEventDefinitions) {
-            ObjectNode errorEventDefinitionJSON = new ObjectMapper().createObjectNode();
-
-            if (errorEventDefinition.getErrorCode() != null)
-              errorEventDefinitionJSON.put("errorCode", errorEventDefinition.getErrorCode());
-            else
-              errorEventDefinitionJSON.putNull("errorCode");
-            
-            errorEventDefinitionJSON.put("handlerActivityId",
-            errorEventDefinition.getHandlerActivityId());
-
-            errorEventDefinitionsArray.add(errorEventDefinitionJSON);
-          }
-        }
-
-        if (errorEventDefinitionsArray.size() > 0)
-          propertiesJSON.put(key, errorEventDefinitionsArray);
-      }
 
     }
 

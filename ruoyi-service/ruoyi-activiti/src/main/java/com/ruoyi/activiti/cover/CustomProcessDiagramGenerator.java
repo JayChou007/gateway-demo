@@ -1,7 +1,7 @@
 package com.ruoyi.activiti.cover;
 
-import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.*;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -10,13 +10,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
+import java.io.*;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class CustomProcessDiagramGenerator extends DefaultProcessDiagramGenerator
@@ -171,18 +167,15 @@ public class CustomProcessDiagramGenerator extends DefaultProcessDiagramGenerato
             FlowElement sourceElement = bpmnModel.getFlowElement(sourceRef);
             FlowElement targetElement = bpmnModel.getFlowElement(targetRef);
             List<GraphicInfo> graphicInfoList = bpmnModel.getFlowLocationGraphicInfo(flowId);
-            if (graphicInfoList != null && graphicInfoList.size() > 0)
-            {
+            if (graphicInfoList != null && graphicInfoList.size() > 0) {
                 graphicInfoList = connectionPerfectionizer(processDiagramCanvas, bpmnModel, sourceElement,
                         targetElement, graphicInfoList);
-                int xPoints[] = new int[graphicInfoList.size()];
-                int yPoints[] = new int[graphicInfoList.size()];
-                for (int i = 1; i < graphicInfoList.size(); i++)
-                {
+                int[] xPoints = new int[graphicInfoList.size()];
+                int[] yPoints = new int[graphicInfoList.size()];
+                for (int i = 1; i < graphicInfoList.size(); i++) {
                     GraphicInfo graphicInfo = graphicInfoList.get(i);
                     GraphicInfo previousGraphicInfo = graphicInfoList.get(i - 1);
-                    if (i == 1)
-                    {
+                    if (i == 1) {
                         xPoints[0] = (int) previousGraphicInfo.getX();
                         yPoints[0] = (int) previousGraphicInfo.getY();
                     }

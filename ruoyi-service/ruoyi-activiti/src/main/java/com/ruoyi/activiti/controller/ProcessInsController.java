@@ -1,37 +1,25 @@
 package com.ruoyi.activiti.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import cn.hutool.core.util.StrUtil;
+import com.ruoyi.activiti.consts.ActivitiConstant;
+import com.ruoyi.activiti.domain.BizBusiness;
+import com.ruoyi.activiti.service.IBizBusinessService;
+import com.ruoyi.activiti.service.IHistoryInfoService;
+import com.ruoyi.activiti.vo.*;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.system.feign.RemoteUserService;
+import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.ruoyi.activiti.consts.ActivitiConstant;
-import com.ruoyi.activiti.domain.BizBusiness;
-import com.ruoyi.activiti.service.IBizBusinessService;
-import com.ruoyi.activiti.service.IHistoryInfoService;
-import com.ruoyi.activiti.vo.HiProcInsVo;
-import com.ruoyi.activiti.vo.ProcessInsVo;
-import com.ruoyi.activiti.vo.RuTask;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.page.PageDomain;
-import com.ruoyi.system.feign.RemoteUserService;
-
-import cn.hutool.core.util.StrUtil;
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 /**
  * <p>File：ProcessInsController.java</p>
@@ -72,13 +60,10 @@ public class ProcessInsController extends BaseController
     public R updateState(@PathVariable("state") String state,
             @PathVariable("processInstanceId") String processInstanceId)
     {
-        if (state.equals("active"))
-        {
+        if ("active".equals(state)) {
             runtimeService.activateProcessInstanceById(processInstanceId);
             log.info("已激活ID为:{}的流程实例", processInstanceId);
-        }
-        else if (state.equals("suspend"))
-        {
+        } else if ("suspend".equals(state)) {
             runtimeService.suspendProcessInstanceById(processInstanceId);
             log.info("已挂起ID为:{}的流程实例", processInstanceId);
         }
@@ -88,7 +73,6 @@ public class ProcessInsController extends BaseController
     /**
      * 获取任务列表
      *
-     * @param rowSize
      * @param page
      * @return
      */
@@ -103,7 +87,7 @@ public class ProcessInsController extends BaseController
         {
             list.add(new RuTask(task));
         }
-        Map<String, Object> m = new HashMap<String, Object>();
+        Map<String, Object> m = new HashMap<String, Object>(3);
         m.put("rows", list);
         m.put("pageNum", page.getPageNum());
         m.put("total", count);
@@ -147,7 +131,7 @@ public class ProcessInsController extends BaseController
                 e.setCurrTaskName(task.getName());
             }
         });
-        Map<String, Object> m = new HashMap<String, Object>();
+        Map<String, Object> m = new HashMap<String, Object>(3);
         m.put("rows", list);
         m.put("pageNum", page.getPageNum());
         m.put("total", count);

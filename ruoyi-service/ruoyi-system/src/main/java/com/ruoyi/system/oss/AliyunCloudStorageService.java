@@ -1,28 +1,25 @@
 package com.ruoyi.system.oss;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.ruoyi.common.exception.file.OssException;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 /**
  * 阿里云存储
  */
-public class AliyunCloudStorageService extends CloudStorageService
-{
+public class AliyunCloudStorageService extends AbstractCloudStorageService {
     private OSS client;
 
-    public AliyunCloudStorageService(CloudStorageConfig config)
-    {
+    public AliyunCloudStorageService(CloudStorageConfig config) {
         this.config = config;
         // 初始化
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         client = new OSSClientBuilder().build(config.getAliyunEndPoint(), config.getAliyunAccessKeyId(),
                 config.getAliyunAccessKeySecret());
     }

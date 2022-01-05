@@ -1,18 +1,16 @@
 package com.ruoyi.auth.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import cn.hutool.core.util.IdUtil;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.redis.annotation.RedisEvict;
 import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.system.domain.SysUser;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import cn.hutool.core.util.IdUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service("accessTokenService")
 public class AccessTokenService
@@ -40,7 +38,7 @@ public class AccessTokenService
         // 生成token
         String token = IdUtil.fastSimpleUUID();
         // 保存或更新用户token
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(3);
         map.put("userId", sysUser.getUserId());
         map.put("token", token);
         map.put("expire", EXPIRE);

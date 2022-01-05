@@ -1,31 +1,22 @@
 package com.ruoyi.common.core.controller;
 
-import java.beans.PropertyEditorSupport;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.page.*;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.sql.SqlUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.page.PageDomain;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.core.page.TableSupport;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.sql.SqlUtil;
+import javax.servlet.http.*;
+import java.beans.PropertyEditorSupport;
+import java.util.*;
 
 /**
  * web层通用数据处理
@@ -99,7 +90,7 @@ public class BaseController
         {
             return Long.valueOf(currentId);
         }
-        return 0l;
+        return 0L;
     }
 
     public String getLoginName()
@@ -124,7 +115,7 @@ public class BaseController
     protected R result(List<?> list)
     {
         PageInfo<?> pageInfo = new PageInfo(list);
-        Map<String, Object> m = new HashMap<String, Object>();
+        Map<String, Object> m = new HashMap<String, Object>(3);
         m.put("rows", list);
         m.put("pageNum", pageInfo.getPageNum());
         m.put("total", pageInfo.getTotal());

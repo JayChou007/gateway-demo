@@ -1,55 +1,28 @@
 package com.ruoyi.common.utils.poi;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.annotation.Excel.Type;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.reflect.ReflectUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.annotation.Excel.Type;
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.text.Convert;
-import com.ruoyi.common.exception.BusinessException;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.ToolUtil;
-import com.ruoyi.common.utils.reflect.ReflectUtils;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * Excel相关处理
@@ -63,7 +36,7 @@ public class ExcelUtil<T>
     /**
      * Excel sheet最大行数，默认65536
      */
-    public static final int     sheetSize = 65536;
+    public static final int SHEET_SIZE = 65536;
 
     /**
      * 工作表名称
@@ -121,7 +94,7 @@ public class ExcelUtil<T>
     /**
      * 对excel表单默认第一个索引名转换成list
      *
-     * @param input 输入流
+     * @param is 输入流
      * @return 转换后集合
      */
     public List<T> importExcel(InputStream is) throws Exception
@@ -133,7 +106,7 @@ public class ExcelUtil<T>
      * 对excel表单指定表格索引名转换成list
      *
      * @param sheetName 表格索引名
-     * @param input 输入流
+     * @param is        输入流
      * @return 转换后集合
      */
     public List<T> importExcel(String sheetName, InputStream is) throws Exception
@@ -164,7 +137,7 @@ public class ExcelUtil<T>
             // 有数据时才处理 得到类的所有field.
             Field[] allFields = clazz.getDeclaredFields();
             // 定义一个map用于存放列的序号和field.
-            Map<Integer, Field> fieldsMap = new HashMap<Integer, Field>();
+            Map<Integer, Field> fieldsMap = new HashMap<Integer, Field>(10);
             for (int col = 0; col < allFields.length; col++)
             {
                 Field field = allFields[col];
@@ -291,7 +264,7 @@ public class ExcelUtil<T>
         try
         {
             // 取出一共有多少个sheet.
-            double sheetNo = Math.ceil(list.size() / sheetSize);
+            double sheetNo = Math.ceil(list.size() / SHEET_SIZE);
             for (int index = 0; index <= sheetNo; index++)
             {
                 createSheet(sheetNo, index);
@@ -394,24 +367,21 @@ public class ExcelUtil<T>
      * 填充excel数据
      *
      * @param index 序号
-     * @param row 单元格行
-     * @param cell 类型单元格
+     * @param row   单元格行
+     * @param cell  类型单元格
      */
-    public void fillExcelData(int index, Row row, Cell cell)
-    {
-        int startNo = index * sheetSize;
-        int endNo = Math.min(startNo + sheetSize, list.size());
+    public void fillExcelData(int index, Row row, Cell cell) {
+        int startNo = index * SHEET_SIZE;
+        int endNo = Math.min(startNo + SHEET_SIZE, list.size());
         // 写入各条记录,每条记录对应excel表中的一行
         CellStyle cs = wb.createCellStyle();
         cs.setAlignment(HorizontalAlignment.CENTER);
         cs.setVerticalAlignment(VerticalAlignment.CENTER);
-        for (int i = startNo; i < endNo; i++)
-        {
+        for (int i = startNo; i < endNo; i++) {
             row = sheet.createRow(i + 1 - startNo);
             // 得到导出对象.
             T vo = (T) list.get(i);
-            for (int j = 0; j < fields.size(); j++)
-            {
+            for (int j = 0; j < fields.size(); j++) {
                 // 获得field.
                 Field field = fields.get(j);
                 // 设置实体类私有属性可访问
@@ -697,7 +667,6 @@ public class ExcelUtil<T>
     /**
      * 创建工作表
      *
-     * @param sheetName，指定Sheet名称
      * @param sheetNo sheet数量
      * @param index 序号
      */

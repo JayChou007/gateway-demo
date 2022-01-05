@@ -1,18 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.io.IOException;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.ruoyi.common.auth.annotation.HasPermissions;
@@ -21,16 +8,17 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.file.OssException;
 import com.ruoyi.common.utils.ValidatorUtils;
 import com.ruoyi.system.domain.SysOss;
-import com.ruoyi.system.oss.CloudConstant;
+import com.ruoyi.system.oss.*;
 import com.ruoyi.system.oss.CloudConstant.CloudService;
-import com.ruoyi.system.oss.CloudStorageConfig;
-import com.ruoyi.system.oss.CloudStorageService;
-import com.ruoyi.system.oss.OSSFactory;
-import com.ruoyi.system.oss.valdator.AliyunGroup;
-import com.ruoyi.system.oss.valdator.QcloudGroup;
-import com.ruoyi.system.oss.valdator.QiniuGroup;
+import com.ruoyi.system.oss.valdator.*;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysOssService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * 文件上传 提供者
@@ -134,7 +122,7 @@ public class SysOssController extends BaseController
         // 上传文件
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-        CloudStorageService storage = OSSFactory.build();
+        AbstractCloudStorageService storage = OSSFactory.build();
         String url = storage.uploadSuffix(file.getBytes(), suffix);
         // 保存文件信息
         SysOss ossEntity = new SysOss();

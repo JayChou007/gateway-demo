@@ -1,14 +1,13 @@
 package com.ruoyi.activiti.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ruoyi.activiti.domain.BizLeave;
 import com.ruoyi.activiti.mapper.BizLeaveMapper;
 import com.ruoyi.activiti.service.IBizLeaveService;
 import com.ruoyi.common.core.text.Convert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 请假Service业务层处理
@@ -88,6 +87,7 @@ public class BizLeaveServiceImpl implements IBizLeaveService
      * @param id 请假ID
      * @return 结果
      */
+    @Override
     public int deleteBizLeaveById(String id)
     {
         return leaveMapper.deleteBizLeaveById(id);

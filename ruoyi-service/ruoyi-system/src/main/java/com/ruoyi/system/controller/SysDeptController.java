@@ -1,19 +1,13 @@
 package com.ruoyi.system.controller;
 
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.SysDept;
 import com.ruoyi.system.service.ISysDeptService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 /**
  * 部门 提供者
@@ -88,9 +82,10 @@ public class SysDeptController extends BaseController
      * 加载角色部门（数据权限）列表树
      */
     @GetMapping("/role/{roleId}")
-    public Set<String> deptTreeData(@PathVariable("roleId") Long roleId)
-    {
-        if (null == roleId || roleId <= 0) return null;
+    public Set<String> deptTreeData(@PathVariable("roleId") Long roleId) {
+        if (null == roleId || roleId <= 0) {
+            return null;
+        }
         return sysDeptService.roleDeptIds(roleId);
     }
 }

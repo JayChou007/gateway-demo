@@ -1,11 +1,5 @@
 package com.ruoyi.system.oss;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -14,23 +8,23 @@ import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
 import com.ruoyi.common.exception.file.OssException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 
 /**
  * 腾讯云存储
  */
-public class QcloudCloudStorageService extends CloudStorageService
-{
+public class QcloudCloudStorageService extends AbstractCloudStorageService {
     private COSClient client;
 
-    public QcloudCloudStorageService(CloudStorageConfig config)
-    {
+    public QcloudCloudStorageService(CloudStorageConfig config) {
         this.config = config;
         // 初始化
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         COSCredentials credentials = new BasicCOSCredentials(config.getQcloudSecretId(), config.getQcloudSecretKey());
         // 设置bucket所在的区域，最新sdk不再支持简写，请填写完整
         Region region = new Region(config.getQcloudRegion());

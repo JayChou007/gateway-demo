@@ -42,7 +42,7 @@ public class SwaggerProvider implements SwaggerResourcesProvider
         // 打开下面注释可以自动扫描接入gateway的服务，为了演示，只扫描system
         // gatewayProperties.getRoutes().stream().filter(routeDefinition ->
         // routes.contains(routeDefinition.getId()))
-        gatewayProperties.getRoutes().stream().filter(routeDefinition -> routeDefinition.getId().equals("ruoyi-system"))
+        gatewayProperties.getRoutes().stream().filter(routeDefinition -> "ruoyi-system".equals(routeDefinition.getId()))
                 .forEach(routeDefinition -> routeDefinition.getPredicates().stream()
                         .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
                         .forEach(predicateDefinition -> resources

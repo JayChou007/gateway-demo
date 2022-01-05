@@ -5,15 +5,14 @@
  */
 package com.ruoyi.activiti.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ruoyi.activiti.domain.BizAudit;
 import com.ruoyi.activiti.mapper.BizAuditMapper;
 import com.ruoyi.activiti.service.IBizAuditService;
 import com.ruoyi.activiti.vo.HiTaskVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>File：BizAuditServiceImpl.java</p>
@@ -108,6 +107,7 @@ public class BizAuditServiceImpl implements IBizAuditService
      * @param id 审核记录ID
      * @return 结果
      */
+    @Override
     public int deleteBizAuditById(Long id)
     {
         return auditMapper.deleteByPrimaryKey(id);

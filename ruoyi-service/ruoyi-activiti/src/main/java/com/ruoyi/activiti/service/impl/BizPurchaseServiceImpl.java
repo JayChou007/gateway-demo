@@ -1,13 +1,12 @@
 package com.ruoyi.activiti.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ruoyi.activiti.domain.BizPurchase;
 import com.ruoyi.activiti.mapper.BizPurchaseMapper;
 import com.ruoyi.activiti.service.IBizPurchaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 报销Service业务层处理
@@ -87,6 +86,7 @@ public class BizPurchaseServiceImpl implements IBizPurchaseService
      * @param id 报销ID
      * @return 结果
      */
+    @Override
     public int deleteBizPurchaseById(String id)
     {
         return purchaseMapper.deleteByPrimaryKey(id);

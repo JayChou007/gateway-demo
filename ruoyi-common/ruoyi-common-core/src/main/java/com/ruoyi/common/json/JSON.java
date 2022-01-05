@@ -1,42 +1,29 @@
 package com.ruoyi.common.json;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.*;
+
+import java.io.*;
 
 /**
  * JSON解析处理
- * 
+ *
  * @author ruoyi
  */
-public class JSON
-{
+public class JSON {
     public static final String DEFAULT_FAIL = "\"Parse failed\"";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectWriter OBJECT_WRITER = OBJECT_MAPPER.writerWithDefaultPrettyPrinter();
 
-    public static void marshal(File file, Object value) throws Exception
-    {
-        try
-        {
-            objectWriter.writeValue(file, value);
-        }
-        catch (JsonGenerationException e)
-        {
+    public static void marshal(File file, Object value) throws Exception {
+        try {
+            OBJECT_WRITER.writeValue(file, value);
+        } catch (JsonGenerationException e) {
             throw new Exception(e);
-        }
-        catch (JsonMappingException e)
-        {
+        } catch (JsonMappingException e) {
             throw new Exception(e);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new Exception(e);
         }
     }
@@ -45,7 +32,7 @@ public class JSON
     {
         try
         {
-            objectWriter.writeValue(os, value);
+            OBJECT_WRITER.writeValue(os, value);
         }
         catch (JsonGenerationException e)
         {
@@ -65,7 +52,7 @@ public class JSON
     {
         try
         {
-            return objectWriter.writeValueAsString(value);
+            return OBJECT_WRITER.writeValueAsString(value);
         }
         catch (JsonGenerationException e)
         {
@@ -85,7 +72,7 @@ public class JSON
     {
         try
         {
-            return objectWriter.writeValueAsBytes(value);
+            return OBJECT_WRITER.writeValueAsBytes(value);
         }
         catch (JsonGenerationException e)
         {
@@ -105,7 +92,7 @@ public class JSON
     {
         try
         {
-            return objectMapper.readValue(file, valueType);
+            return OBJECT_MAPPER.readValue(file, valueType);
         }
         catch (JsonParseException e)
         {
@@ -125,7 +112,7 @@ public class JSON
     {
         try
         {
-            return objectMapper.readValue(is, valueType);
+            return OBJECT_MAPPER.readValue(is, valueType);
         }
         catch (JsonParseException e)
         {
@@ -145,7 +132,7 @@ public class JSON
     {
         try
         {
-            return objectMapper.readValue(str, valueType);
+            return OBJECT_MAPPER.readValue(str, valueType);
         }
         catch (JsonParseException e)
         {
@@ -169,7 +156,7 @@ public class JSON
             {
                 bytes = new byte[0];
             }
-            return objectMapper.readValue(bytes, 0, bytes.length, valueType);
+            return OBJECT_MAPPER.readValue(bytes, 0, bytes.length, valueType);
         }
         catch (JsonParseException e)
         {

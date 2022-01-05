@@ -1,23 +1,12 @@
 package com.ruoyi.activiti.controller;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.zip.ZipInputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.ruoyi.activiti.consts.ActivitiConstant;
+import com.ruoyi.activiti.cover.ICustomProcessDiagramGenerator;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.exception.RuoyiException;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -28,19 +17,16 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ruoyi.activiti.consts.ActivitiConstant;
-import com.ruoyi.activiti.cover.ICustomProcessDiagramGenerator;
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.exception.RuoyiException;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.io.*;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.zip.ZipInputStream;
 
 /**
  * 流程管理
@@ -155,14 +141,11 @@ public class ProcessController
     @RequestMapping(value = "update/{processId}/{state}")
     public R updateState(@PathVariable("state") String state, @PathVariable("processId") String processId)
     {
-        if (state.equals("active"))
-        {
+        if ("active".equals(state)) {
             // 一并激活流程实例
             repositoryService.activateProcessDefinitionById(processId, true, new Date());
             log.info("已激活ID为:{}的流程", processId);
-        }
-        else if (state.equals("suspend"))
-        {
+        } else if ("suspend".equals(state)) {
             // 一并挂起流程实例
             repositoryService.suspendProcessDefinitionById(processId, true, new Date());
             log.info("已挂起ID为:{}的流程", processId);

@@ -1,24 +1,5 @@
 package com.ruoyi.generator.service.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.Constants;
@@ -31,9 +12,21 @@ import com.ruoyi.generator.domain.GenTableColumn;
 import com.ruoyi.generator.mapper.GenTableColumnMapper;
 import com.ruoyi.generator.mapper.GenTableMapper;
 import com.ruoyi.generator.service.IGenTableService;
-import com.ruoyi.generator.util.GenUtils;
-import com.ruoyi.generator.util.VelocityInitializer;
-import com.ruoyi.generator.util.VelocityUtils;
+import com.ruoyi.generator.util.*;
+import org.apache.commons.io.IOUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 业务 服务层实现
@@ -83,6 +76,7 @@ public class GenTableServiceImpl implements IGenTableService
      * @param genTable 业务信息
      * @return 数据库表集合
      */
+    @Override
     public List<GenTable> selectDbTableList(GenTable genTable)
     {
         return genTableMapper.selectDbTableList(genTable);
@@ -94,6 +88,7 @@ public class GenTableServiceImpl implements IGenTableService
      * @param tableNames 表名称组
      * @return 数据库表集合
      */
+    @Override
     public List<GenTable> selectDbTableListByNames(String[] tableNames)
     {
         return genTableMapper.selectDbTableListByNames(tableNames);
@@ -176,6 +171,7 @@ public class GenTableServiceImpl implements IGenTableService
      * @param tableId 表编号
      * @return 预览数据列表
      */
+    @Override
     public Map<String, String> previewCode(Long tableId)
     {
         Map<String, String> dataMap = new LinkedHashMap<>();
@@ -279,6 +275,7 @@ public class GenTableServiceImpl implements IGenTableService
      * 
      * @param genTable 业务信息
      */
+    @Override
     public void validateEdit(GenTable genTable)
     {
         if (GenConstants.TPL_TREE.equals(genTable.getTplCategory()))
@@ -302,8 +299,8 @@ public class GenTableServiceImpl implements IGenTableService
 
     /**
      * 设置主键列信息
-     * 
-     * @param genTable 业务表信息
+     *
+     * @param table   业务表信息
      * @param columns 业务字段列表
      */
     public void setPkColumn(GenTable table, List<GenTableColumn> columns)

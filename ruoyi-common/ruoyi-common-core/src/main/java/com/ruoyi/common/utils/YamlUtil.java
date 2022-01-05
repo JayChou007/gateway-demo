@@ -1,14 +1,11 @@
 package com.ruoyi.common.utils;
 
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import com.ruoyi.common.utils.StringUtils;
+
+import java.io.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 配置处理工具类
@@ -65,20 +62,15 @@ public class YamlUtil
     @SuppressWarnings("unchecked")
     public static void setProperty(Map<?, ?> map, Object qualifiedKey, Object value)
     {
-        if (map != null && !map.isEmpty() && qualifiedKey != null)
-        {
+        if (map != null && !map.isEmpty() && qualifiedKey != null) {
             String input = String.valueOf(qualifiedKey);
-            if (!input.equals(""))
-            {
-                if (input.contains("."))
-                {
+            if (!"".equals(input)) {
+                if (input.contains(".")) {
                     int index = input.indexOf(".");
                     String left = input.substring(0, index);
                     String right = input.substring(index + 1, input.length());
                     setProperty((Map<?, ?>) map.get(left), right, value);
-                }
-                else
-                {
+                } else {
                     ((Map<Object, Object>) map).put(qualifiedKey, value);
                 }
             }

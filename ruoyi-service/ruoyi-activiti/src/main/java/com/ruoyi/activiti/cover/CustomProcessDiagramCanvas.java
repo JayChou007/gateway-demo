@@ -1,31 +1,20 @@
 package com.ruoyi.activiti.cover;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Paint;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute;
-import java.awt.font.TextLayout;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
-
-import javax.imageio.ImageIO;
-
+import com.ruoyi.activiti.consts.ActivitiConstant;
 import org.activiti.bpmn.model.AssociationDirection;
 import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.image.exception.ActivitiImageException;
 import org.activiti.image.impl.DefaultProcessDiagramCanvas;
 import org.activiti.image.util.ReflectUtil;
 
-import com.ruoyi.activiti.consts.ActivitiConstant;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.font.*;
+import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 /**
  * 
  * <p>File：CustomProcessDiagramCanvas.java</p>
@@ -94,12 +83,9 @@ public class CustomProcessDiagramCanvas extends DefaultProcessDiagramCanvas
         Paint originalPaint = g.getPaint();
         Stroke originalStroke = g.getStroke();
         g.setPaint(CONNECTION_COLOR);
-        if (connectionType.equals("association"))
-        {
+        if ("association".equals(connectionType)) {
             g.setStroke(ASSOCIATION_STROKE);
-        }
-        else if (highLighted)
-        {
+        } else if (highLighted) {
             g.setPaint(color);
             g.setStroke(HIGHLIGHT_FLOW_STROKE);
         }

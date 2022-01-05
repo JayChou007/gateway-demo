@@ -1,28 +1,23 @@
 package com.ruoyi.system.oss;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-
 import com.qiniu.http.Response;
-import com.qiniu.storage.Configuration;
-import com.qiniu.storage.Region;
-import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.*;
 import com.qiniu.util.Auth;
 import com.ruoyi.common.exception.file.OssException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 七牛云存储
  */
-public class QiniuCloudStorageService extends CloudStorageService
-{
+public class QiniuCloudStorageService extends AbstractCloudStorageService {
     private UploadManager uploadManager;
 
-    private String        token;
+    private String token;
 
-    public QiniuCloudStorageService(CloudStorageConfig config)
-    {
+    public QiniuCloudStorageService(CloudStorageConfig config) {
         this.config = config;
         // 初始化
         init();

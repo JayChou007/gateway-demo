@@ -1,27 +1,18 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.SysRole;
-import com.ruoyi.system.domain.SysRoleDept;
-import com.ruoyi.system.domain.SysRoleMenu;
-import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysRoleDeptMapper;
-import com.ruoyi.system.mapper.SysRoleMapper;
-import com.ruoyi.system.mapper.SysRoleMenuMapper;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.ISysRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 角色 业务层处理
@@ -139,24 +130,23 @@ public class SysRoleServiceImpl implements ISysRoleService
 
     /**
      * 批量删除角色信息
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @throws Exception
      */
     @Override
-    public int deleteRoleByIds(String ids) throws BusinessException
-    {
+    public int deleteRoleByIds(String ids) throws BusinessException {
         Long[] roleIds = Convert.toLongArray(ids);
-        for (Long roleId : roleIds)
-        {
+        for (Long roleId : roleIds) {
             SysRole role = selectRoleById(roleId);
-            if (countUserRoleByRoleId(roleId) > 0)
-            {
+            if (countUserRoleByRoleId(roleId) > 0) {
                 throw new BusinessException(String.format("%1$s已分配,不能删除", role.getRoleName()));
             }
         }
-       if (roleIds.length>0) return roleMapper.deleteRoleByIds(roleIds);
-       return 0;
+        if (roleIds.length > 0) {
+            return roleMapper.deleteRoleByIds(roleIds);
+        }
+        return 0;
     }
 
     /**
@@ -336,6 +326,7 @@ public class SysRoleServiceImpl implements ISysRoleService
      * @param userIds 需要删除的用户数据ID
      * @return 结果
      */
+    @Override
     public int deleteAuthUsers(Long roleId, String userIds)
     {
         return userRoleMapper.deleteUserRoleInfos(roleId, Convert.toLongArray(userIds));
@@ -348,6 +339,7 @@ public class SysRoleServiceImpl implements ISysRoleService
      * @param userIds 需要删除的用户数据ID
      * @return 结果
      */
+    @Override
     public int insertAuthUsers(Long roleId, String userIds)
     {
         Long[] users = Convert.toLongArray(userIds);
