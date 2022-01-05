@@ -150,7 +150,6 @@ public class ProcessInsController extends BaseController
      * 
      * @param ids
      * @param reason
-     * @param delBusiness 是否删除业务
      * @return
      * @author zmr
      */
