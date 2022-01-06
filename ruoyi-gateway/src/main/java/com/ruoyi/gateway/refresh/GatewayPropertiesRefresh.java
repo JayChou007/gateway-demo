@@ -64,6 +64,12 @@ public class GatewayPropertiesRefresh implements ApplicationContextAware, Applic
      */
     private void refreshGatewayProperties(ConfigChangeEvent changeEvent) {
         logger.info("Refreshing GatewayProperties!");
+        for (String key : changeEvent.changedKeys()) {
+            logger.info("key : " + key);
+            ConfigChange change = changeEvent.getChange(key);
+            logger.info("old value : " + change.getOldValue());
+            logger.info("new value : " + change.getNewValue());
+        }
         preDestroyGatewayProperties(changeEvent);
         this.applicationContext.publishEvent(new EnvironmentChangeEvent(changeEvent.changedKeys()));
         refreshGatewayRouteDefinition();
